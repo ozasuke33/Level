@@ -34,9 +34,14 @@ class OBJECT_OT_export_source(bpy.types.Operator):
 
         sources = bpy.data.collections["Source"].all_objects
 
+        bpy.ops.outliner.orphans_purge()
+
         bpy.ops.object.select_all(action="DESELECT")
         for obj in sources:
             obj.select_set(True)
+            if obj.data:
+                obj.data.name = obj.name
+            obj.rotation_mode = "YXZ"
 
         bpy.ops.gaops.batch_export(export_format="GLTF_SEPARATE", path=self.path)
 
