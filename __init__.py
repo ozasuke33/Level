@@ -19,19 +19,28 @@ from .operation.export_source import *
 from .operation.level2json import *
 from .panel.pt_export_source import *
 from .panel.pt_level2json import *
+from .panel.pt_level import *
+from .property_group.pg_level import *
 
 classess = [
     OBJECT_OT_export_source,
     OBJECT_OT_level2json,
     UI_PT_export_source,
-    UI_PT_level2json
+    UI_PT_level2json,
+    UI_PT_level,
+    PropertyGroup_level,
 ]
+
 
 def register():
     for cls in classess:
         bpy.utils.register_class(cls)
 
+    bpy.types.WindowManager.Level = bpy.props.PointerProperty(type=PropertyGroup_level)
+
 
 def unregister():
     for cls in reversed(classess):
         bpy.utils.unregister_class(cls)
+
+    del bpy.types.WindowManager.Level

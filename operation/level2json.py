@@ -58,6 +58,9 @@ class OBJECT_OT_level2json(bpy.types.Operator):
                 dict["scale_xyz"] = (i.scale.x, i.scale.z, i.scale.y)
                 level["objects"].append(dict)
             level_export["level"] = level
+        else:
+            self.report({"ERROR"}, "No level has been selected.")
+            return {"FINISHED"}
 
         filename = str(pathlib.Path(bpy.path.abspath(self.path)) / (c.name + ".json"))
         with open(filename, "w") as file:
