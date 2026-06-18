@@ -17,16 +17,12 @@ _refresh_.reload_modules()
 
 from .operation.export_source import *
 from .operation.level2json import *
-from .panel.pt_export_source import *
-from .panel.pt_level2json import *
 from .panel.pt_level import *
 from .property_group.pg_level import *
 
 classess = [
     OBJECT_OT_export_source,
     OBJECT_OT_level2json,
-    UI_PT_export_source,
-    UI_PT_level2json,
     UI_PT_level,
     PropertyGroup_level,
 ]

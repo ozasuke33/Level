@@ -4,6 +4,8 @@ import bpy_extras
 import pathlib
 import json
 import math
+import subprocess
+import os
 
 
 class OBJECT_OT_level2json(bpy.types.Operator):
@@ -62,8 +64,27 @@ class OBJECT_OT_level2json(bpy.types.Operator):
             self.report({"ERROR"}, "No level has been selected.")
             return {"FINISHED"}
 
+        pathlib.Path(bpy.path.abspath(self.path)).mkdir(exist_ok=True)
         filename = str(pathlib.Path(bpy.path.abspath(self.path)) / (c.name + ".json"))
         with open(filename, "w") as file:
             json.dump(level_export, file, indent=4)
+
+        script_name = str(
+            pathlib.Path(os.path.dirname(__file__)) / "load_level_json.gd"
+        )
+
+        subprocess.Popen(
+            [
+                context.window_manager.Level.godot_path,
+                "--headless",
+                "--path",
+                context.window_manager.Level.project_path,
+                "--script",
+                script_name,
+                "--quit",
+                "--",
+                c.name,
+            ]
+        )
 
         return {"FINISHED"}
