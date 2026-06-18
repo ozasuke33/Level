@@ -1,12 +1,11 @@
 extends SceneTree
 
 func blender_to_godot(m: Array) -> Transform3D:
-	# Blenderの行列（行優先）をそのままTransform3Dに
 	var t_blender = Transform3D(
 		Basis(
-			Vector3(m[0], m[4], m[8]), # 列0
-			Vector3(m[1], m[5], m[9]), # 列1
-			Vector3(m[2], m[6], m[10]) # 列2
+			Vector3(m[0], m[4], m[8]),
+			Vector3(m[1], m[5], m[9]),
+			Vector3(m[2], m[6], m[10])
 		),
 		Vector3(m[3], m[7], m[11]) # origin
 	)
