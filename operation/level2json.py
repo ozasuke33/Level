@@ -51,13 +51,7 @@ class OBJECT_OT_level2json(bpy.types.Operator):
                 dict["parent_name"] = ""
                 if i.parent:
                     dict["parent_name"] = i.parent.name
-                dict["location_xyz"] = (i.location.x, i.location.z, i.location.y * -1)
-                dict["rotation_euler_xyz"] = (
-                    i.rotation_euler.x,
-                    i.rotation_euler.z,
-                    i.rotation_euler.y * -1,
-                )
-                dict["scale_xyz"] = (i.scale.x, i.scale.z, i.scale.y)
+                dict["matrix"] = [v for row in i.matrix_local for v in row]
                 level["objects"].append(dict)
             level_export["level"] = level
         else:

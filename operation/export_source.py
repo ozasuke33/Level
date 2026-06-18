@@ -41,7 +41,7 @@ class OBJECT_OT_export_source(bpy.types.Operator):
             obj.select_set(True)
             if obj.data:
                 obj.data.name = obj.name
-            obj.rotation_mode = "YXZ"
+            # obj.rotation_mode = "YXZ"
 
         bpy.ops.gaops.batch_export(export_format="GLTF_SEPARATE", path=self.path)
 

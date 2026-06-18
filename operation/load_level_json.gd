@@ -1,5 +1,28 @@
 extends SceneTree
 
+func blender_to_godot(m: Array) -> Transform3D:
+	# Blenderの行列（行優先）をそのままTransform3Dに
+	var t_blender = Transform3D(
+		Basis(
+			Vector3(m[0], m[4], m[8]), # 列0
+			Vector3(m[1], m[5], m[9]), # 列1
+			Vector3(m[2], m[6], m[10]) # 列2
+		),
+		Vector3(m[3], m[7], m[11]) # origin
+	)
+
+	# Blender(右手系,Z-up) → Godot(右手系,Y-up)
+	const P := Transform3D(
+		Basis(
+			Vector3(1, 0, 0),
+			Vector3(0, 0, -1),
+			Vector3(0, 1, 0)
+		),
+		Vector3.ZERO
+	)
+
+	return P * t_blender * P.inverse()
+
 func set_owner_recursive(node, owner):
 	if node != owner:
 		node.owner = owner
@@ -26,17 +49,11 @@ func _init():
 	for obj in level["objects"]:
 		var n = Node3D.new()
 		n.name = obj["object_name"]
-		n.position[0] = obj["location_xyz"][0]
-		n.position[1] = obj["location_xyz"][1]
-		n.position[2] = obj["location_xyz"][2]
-		n.rotation[0] = obj["rotation_euler_xyz"][0]
-		n.rotation[1] = obj["rotation_euler_xyz"][1]
-		n.rotation[2] = obj["rotation_euler_xyz"][2]
-		n.scale[0] = obj["scale_xyz"][0]
-		n.scale[1] = obj["scale_xyz"][1]
-		n.scale[2] = obj["scale_xyz"][2]
+		n.transform = blender_to_godot(obj["matrix"])
+
 		var gltf: PackedScene = load("res://" + "Source/" + obj["instance_name"] + ".gltf")
 		var inst = gltf.instantiate()
+		inst.transform = Transform3D.IDENTITY
 		n.add_child(inst)
 		nodes[obj["object_name"]] = n
 		parent_name[obj["object_name"]] = obj["parent_name"]
