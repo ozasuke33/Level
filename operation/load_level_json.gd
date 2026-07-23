@@ -50,10 +50,11 @@ func _init():
 		n.name = obj["object_name"]
 		n.transform = blender_to_godot(obj["matrix"])
 
-		var gltf: PackedScene = load("res://" + "Source/" + obj["instance_name"] + ".gltf")
-		var inst = gltf.instantiate()
-		inst.transform = Transform3D.IDENTITY
-		n.add_child(inst)
+		var sub = Node3D.new()
+		sub.name = obj["object_name"] + "_mesh"
+		sub.scene_file_path = "res://Source/" + obj["instance_name"] + ".gltf"
+		n.add_child(sub)
+		
 		nodes[obj["object_name"]] = n
 		parent_name[obj["object_name"]] = obj["parent_name"]
 
