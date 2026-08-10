@@ -50,11 +50,16 @@ func _init():
 		n.name = obj["object_name"]
 		n.transform = blender_to_godot(obj["matrix"])
 
+		if "custom_properties" in obj:
+			var props = obj["custom_properties"]
+			for key in props.keys():
+				n.set_meta(key, props[key])
+
 		var sub = Node3D.new()
 		sub.name = obj["object_name"] + "_mesh"
 		sub.scene_file_path = "res://Source/" + obj["instance_name"] + ".gltf"
 		n.add_child(sub)
-		
+
 		nodes[obj["object_name"]] = n
 		parent_name[obj["object_name"]] = obj["parent_name"]
 

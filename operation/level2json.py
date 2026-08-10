@@ -8,6 +8,18 @@ import subprocess
 import os
 
 
+def idprop_to_python(value):
+    if isinstance(value, bpy.types.ID):
+        return value.name
+    if hasattr(value, "to_list"):
+        return list(value)
+    if hasattr(value, "keys"):
+        return {k: idprop_to_python(value[k]) for k in value.keys()}
+    if isinstance(value, list):
+        return [idprop_to_python(v) for v in value]
+    return value
+
+
 class OBJECT_OT_level2json(bpy.types.Operator):
     bl_idname = "level.level2json"
     bl_label = "level2json"
@@ -52,6 +64,9 @@ class OBJECT_OT_level2json(bpy.types.Operator):
                 if i.parent:
                     dict["parent_name"] = i.parent.name
                 dict["matrix"] = [v for row in i.matrix_local for v in row]
+                props = {k: idprop_to_python(i[k]) for k in i.keys() if k != "_RNA_UI"}
+                if props:
+                    dict["custom_properties"] = props
                 level["objects"].append(dict)
             level_export["level"] = level
         else:
